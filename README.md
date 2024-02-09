@@ -34,7 +34,7 @@ The mod offers configuration options to tailor the appearance of the typing indi
 
 ## Feedback & Support
 
-If you encounter any issues, have suggestions, or need assistance, feel free to [submit an issue](#issues) or reach out for support.
+If you encounter any issues, have suggestions, or need assistance, feel free to [submit an issue](https://github.com/N0edL/istyping/issues) or reach out for support.
 
 ## Contributing
 
