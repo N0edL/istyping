@@ -2,7 +2,7 @@
 <h1 align="center">IsTyping Minecraft Forge Mod</h1>
 
 <p align="center">
-    <a href="[discord.gg/nmAtQTUCHd](https://discordapp.com/users/925538473044234260)"><img alt="Discord" src="https://img.shields.io/discord/1042382754857357323?style=flat-square&logo=discord&logoColor=white&label=Discord&color=white"></a>
+    <a href="discord.gg/nmAtQTUCHd](https://discordapp.com/users/925538473044234260"><img alt="Discord" src="https://img.shields.io/discord/1042382754857357323?style=flat-square&logo=discord&logoColor=white&label=Discord&color=white"></a>
    <img alt="Static Badge" src="https://img.shields.io/badge/version-1.0-white?style=flat-square">
     
 </p>
