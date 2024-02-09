@@ -43,3 +43,4 @@ Contributions to IsTyping mod are welcome! Fork the repository, make your change
 ## License
 
 IsTyping mod is licensed under the [MIT License](LICENSE.md).
+Forge licensed [Forge License](LICENSE-Forge.md).
