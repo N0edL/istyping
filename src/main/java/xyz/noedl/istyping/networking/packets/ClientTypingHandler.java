@@ -2,7 +2,9 @@ package xyz.noedl.istyping.networking.packets;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.network.play.NetworkPlayerInfo;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.Style;
 import net.minecraftforge.fml.network.NetworkEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -27,7 +29,8 @@ public class ClientTypingHandler {
             LOGGER.error("Player name is null!");
             return;
         }
-        String modifiedPlayerName = playerName + (Config.CLIENT.showAsIcon.get() ? " 1" : " [Typing]");
-        playerInfo.setDisplayName(new StringTextComponent(msg.isTyping ? modifiedPlayerName : playerName));
+
+        String modifiedPlayerName = playerName + (Config.CLIENT.showAsIcon.get() ? " \uFFD1" : " [Typing]");
+        playerInfo.setDisplayName(new StringTextComponent(msg.isTyping ? modifiedPlayerName : playerName).setStyle(Style.EMPTY.setFontId(new ResourceLocation("istyping", "icons"))));
     }
 }

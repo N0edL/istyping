@@ -5,8 +5,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
 import net.minecraft.client.gui.screen.ChatScreen;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.Style;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.GuiScreenEvent;
@@ -29,8 +31,19 @@ import xyz.noedl.istyping.networking.packets.NotifyServerTyping;
 public class Gui {
     @SubscribeEvent
     public static void onPlayerJoin(final PlayerEvent.PlayerLoggedInEvent event) {
-        ITextComponent message = new StringTextComponent("Welcome to the server! " + event.getPlayer().getDisplayName().getString());
-        event.getPlayer().sendMessage(message, event.getPlayer().getUniqueID());
+        if (!event.getPlayer().getEntityWorld().isRemote) {
+            for (ServerPlayerEntity player : event.getPlayer().getEntityWorld().getServer().getPlayerList().getPlayers()) {
+                player.getCapability(IsTypingManager.ISTYPING).ifPresent(cap -> {
+                    if (cap.isTyping()) {
+                        NetworkChannel.NETWORK_CHANNEL.send(PacketDistributor.PLAYER.with(() -> ((ServerPlayerEntity) event.getPlayer())), new NotifyClientTyping(true, player.getUniqueID()));
+                    }
+                });
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onPlayerRespawn(final PlayerEvent.PlayerRespawnEvent event) {
         if (!event.getPlayer().getEntityWorld().isRemote) {
             for (ServerPlayerEntity player : event.getPlayer().getEntityWorld().getServer().getPlayerList().getPlayers()) {
                 player.getCapability(IsTypingManager.ISTYPING).ifPresent(cap -> {
@@ -59,9 +72,7 @@ public class Gui {
     public static void onRenderNameplate(final RenderNameplateEvent event) {
         event.getEntity().getCapability(IsTypingManager.ISTYPING).ifPresent(cap -> {
             if (cap.isTyping()) {
-                ITextComponent playerName = event.getContent();
-                String modifiedPlayerName = playerName.getString() + (Config.CLIENT.showAsIcon.get() ? " 1" : " [Typing]");
-                event.setContent(ITextComponent.getTextComponentOrEmpty(modifiedPlayerName));
+                event.setContent(event.getContent().deepCopy().appendString(Config.CLIENT.showAsIcon.get() ? " \uFFD1" : " [Typing]").setStyle(Style.EMPTY.setFontId(new ResourceLocation("istyping", "icons"))));
             }
         });
     }
