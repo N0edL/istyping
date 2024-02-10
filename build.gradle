@@ -7,6 +7,7 @@ buildscript {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
     }
 }
+
 apply plugin: 'net.minecraftforge.gradle'
 // Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 apply plugin: 'eclipse'
@@ -48,12 +49,18 @@ minecraft {
             // "REGISTRIES": For firing of registry events.
             // "REGISTRYDUMP": For getting the contents of all registries.
             property 'forge.logging.markers', 'REGISTRIES'
-
+            //args "--username", "Dev####"
             // Recommended logging level for the console
             // You can set various levels here.
             // Please read: https://stackoverflow.com/questions/2031163/when-to-use-the-different-log-levels
             property 'forge.logging.console.level', 'debug'
 
+            property 'minecraft.api.auth.host', 'https://nope.invalid'
+            property 'minecraft.api.account.host', 'https://nope.invalid'
+            property 'minecraft.api.session.host', 'https://nope.invalid'
+            property 'minecraft.api.services.host', 'https://nope.invalid'
+            property 'minecraft.api.services.host', 'https://nope.invalid'
+            args "--username", "Dev####"
             mods {
                 istyping {
                     source sourceSets.main
@@ -76,6 +83,11 @@ minecraft {
             // Please read: https://stackoverflow.com/questions/2031163/when-to-use-the-different-log-levels
             property 'forge.logging.console.level', 'debug'
 
+            property 'minecraft.api.auth.host', 'https://nope.invalid'
+            property 'minecraft.api.account.host', 'https://nope.invalid'
+            property 'minecraft.api.session.host', 'https://nope.invalid'
+            property 'minecraft.api.services.host', 'https://nope.invalid'
+            property 'minecraft.api.services.host', 'https://nope.invalid'
             mods {
                 istyping {
                     source sourceSets.main
@@ -122,6 +134,7 @@ dependencies {
     // You may put jars on which you depend on in ./libs or you may define them like so..
     // compile "some.group:artifact:version:classifier"
     // compile "some.group:artifact:version"
+    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 
     // Real examples
     // compile 'com.mod-buildcraft:buildcraft:6.0.8:dev'  // adds buildcraft to the dev env

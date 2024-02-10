@@ -1,93 +1,68 @@
 package xyz.noedl.istyping.content;
 
 
-
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.common.Mod;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-
-import xyz.noedl.istyping.IsTyping;
+import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
 import net.minecraft.client.gui.screen.ChatScreen;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraft.client.network.play.NetworkPlayerInfo;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.GuiScreenEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.client.event.RenderNameplateEvent;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.network.PacketDistributor;
+import org.apache.logging.log4j.LogManager;
+import xyz.noedl.istyping.IsTyping;
+import xyz.noedl.istyping.capability.IsTypingManager;
+import xyz.noedl.istyping.config.Config;
+import xyz.noedl.istyping.networking.NetworkChannel;
+import xyz.noedl.istyping.networking.packets.NotifyClientTyping;
+import xyz.noedl.istyping.networking.packets.NotifyServerTyping;
 
 
 @Mod.EventBusSubscriber(modid = IsTyping.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class Gui {
-
-    private static final Logger LOGGER = LogManager.getLogger();
     @SubscribeEvent
-    public static void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {
-
+    public static void onPlayerJoin(final PlayerEvent.PlayerLoggedInEvent event) {
         ITextComponent message = new StringTextComponent("Welcome to the server! " + event.getPlayer().getDisplayName().getString());
         event.getPlayer().sendMessage(message, event.getPlayer().getUniqueID());
+        if (!event.getPlayer().getEntityWorld().isRemote) {
+            for (ServerPlayerEntity player : event.getPlayer().getEntityWorld().getServer().getPlayerList().getPlayers()) {
+                player.getCapability(IsTypingManager.ISTYPING).ifPresent(cap -> {
+                    if (cap.isTyping()) {
+                        NetworkChannel.NETWORK_CHANNEL.send(PacketDistributor.PLAYER.with(() -> ((ServerPlayerEntity) event.getPlayer())), new NotifyClientTyping(true, player.getUniqueID()));
+                    }
+                });
+            }
+        }
     }
-
 
     @SubscribeEvent
     @OnlyIn(Dist.CLIENT)
-    public void initGui(GuiScreenEvent.InitGuiEvent.Post event) {
-        Screen gui = event.getGui();
-        if (gui instanceof ChatScreen) {
-            NetworkPlayerInfo playerInfo = Minecraft.getInstance().getConnection().getPlayerInfo(Minecraft.getInstance().player.getUniqueID());
-            LOGGER.info("Chat screen detected");
-            if (playerInfo == null) {
-                LOGGER.error("PlayerInfo is null!");
-                return;
+    public static void onClientTick(final TickEvent.ClientTickEvent event) {
+        if (Minecraft.getInstance().player == null) return;
+        Minecraft.getInstance().player.getCapability(IsTypingManager.ISTYPING).ifPresent(cap -> {
+            if (Minecraft.getInstance().currentScreen instanceof ChatScreen != cap.isTyping()) {
+                cap.setTyping(Minecraft.getInstance().currentScreen instanceof ChatScreen);
+                NetworkChannel.NETWORK_CHANNEL.sendToServer(new NotifyServerTyping(Minecraft.getInstance().currentScreen instanceof ChatScreen, Minecraft.getInstance().player.getUniqueID()));
             }
-            String playerName = playerInfo.getGameProfile().getName();
-            if (playerName == null) {
-                LOGGER.error("Player name is null!");
-                return;
-            }
-
-            String modifiedPlayerName = playerName + " [Typing]";
-            // Set the modified name back to the player's display name
-            playerInfo.setDisplayName(new StringTextComponent(modifiedPlayerName));
-            LOGGER.info("Player " + playerName + " is typing");
-        }
-    }
-
-    private int ticks = 0;
-    private static final int LOG_INTERVAL = 200;
-
-    @SubscribeEvent
-    public void onPlayerTick(TickEvent.PlayerTickEvent event) {
-        if (event.phase == TickEvent.Phase.END && event.player.world.isRemote) {
-            if (ticks % LOG_INTERVAL == 0) {
-                logPlayerList(event.player.world);
-            }
-            ticks++;
-        }
+        });
     }
 
     @SubscribeEvent
-    public void onWorldTick(TickEvent.WorldTickEvent event) {
-        if (event.phase == TickEvent.Phase.END && !event.world.isRemote) {
-            if (ticks % LOG_INTERVAL == 0) {
-                logPlayerList(event.world);
+    @OnlyIn(Dist.CLIENT)
+    public static void onRenderNameplate(final RenderNameplateEvent event) {
+        event.getEntity().getCapability(IsTypingManager.ISTYPING).ifPresent(cap -> {
+            if (cap.isTyping()) {
+                ITextComponent playerName = event.getContent();
+                String modifiedPlayerName = playerName.getString() + (Config.CLIENT.showAsIcon.get() ? " 1" : " [Typing]");
+                event.setContent(ITextComponent.getTextComponentOrEmpty(modifiedPlayerName));
             }
-            ticks++;
-        }
+        });
     }
-
-    private void logPlayerList(World world) {
-        LOGGER.info("Player List:");
-        for (ServerPlayerEntity player : world.getServer().getPlayerList().getPlayers()) {
-            LOGGER.info(player.getDisplayName().getString());
-        }
-    }
-
 }
