@@ -20,7 +20,7 @@ IsTyping is a Minecraft Forge mod designed to provide visual indicators when a p
 ## Installation
 
 1. **Download Forge**: Ensure you have Minecraft Forge installed. You can download Forge from [here](https://files.minecraftforge.net/).
-2. **Download IsTyping Mod**: Download the latest version of IsTyping mod from the [releases page](#releases).
+2. **Download IsTyping Mod**: Download the latest version of IsTyping mod from the [releases page](https://github.com/N0edL/istyping/releases).
 3. **Install IsTyping Mod**: Place the downloaded IsTyping `.jar` file into your Minecraft mods folder.
 4. **Launch Minecraft**: Start Minecraft with the Forge profile.
 
@@ -43,4 +43,3 @@ Contributions to IsTyping mod are welcome! Fork the repository, make your change
 ## License
 
 IsTyping mod is licensed under the [MIT License](LICENSE.md).
-Forge licensed [Forge License](LICENSE-Forge.md).
