@@ -3,8 +3,8 @@
 
 <p align="center">
     <a href="https://discordapp.com/users/925538473044234260"><img alt="Discord" src="https://img.shields.io/discord/1042382754857357323?style=flat-square&logo=discord&logoColor=white&label=Discord&color=white"></a>
-   <img alt="Static Badge" src="https://img.shields.io/badge/version-1.1-white?style=flat-square">
-    
+    <a href="https://github.com/N0edL/istyping/blob/master/src/main/resources/META-INF/mods.toml"><img alt="Static Badge" src="https://img.shields.io/badge/version-1.1-white?style=flat-square&logo=conventionalcommits&logoColor=white"></a>
+    <a href="https://www.curseforge.com/"><img alt="Static Badge" src="https://img.shields.io/badge/CurstForge-Is_Typing_1.1-white?style=flat-square&logo=curseforge&logoColor=white"></a>
 </p>
 
 ## Overview
