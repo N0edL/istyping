@@ -28,17 +28,9 @@ IsTyping is a Minecraft Forge mod designed to provide visual indicators when a p
 
 Once IsTyping mod is installed, the typing indicators will automatically appear whenever players are typing in the chat window. Customize the style of the indicators by modifying the configuration file.
 
-## Configuration
-
-The mod offers configuration options to tailor the appearance of the typing indicators. Locate the `istyping.cfg` file in your Minecraft config folder after installing the mod or in the mods window inside the game. Adjust the settings according to your preferences.
-
 ## Feedback & Support
 
 If you encounter any issues, have suggestions, or need assistance, feel free to [submit an issue](https://github.com/N0edL/istyping/issues) or reach out for support.
-
-## Contributing
-
-Contributions to IsTyping mod are welcome! Fork the repository, make your changes, and submit a pull request. Ensure that your contributions align with the project's guidelines.
 
 ## License
 
